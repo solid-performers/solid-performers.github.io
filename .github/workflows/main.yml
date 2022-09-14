@@ -66,16 +66,13 @@ jobs:
           dotnet test . -c Release
 
       - name: Publish artifact
+        if: github.event_name == 'push' && github.ref_name == 'main'
         shell: bash
         run: |
           dotnet publish ./src/WebApp -c Release -o published
 
-      # - name: Copy static files
-      #   shell: bash
-      #   run: |
-      #     cp CNAME ./published/wwwroot
-
       - name: Upload artifact
+        if: github.event_name == 'push' && github.ref_name == 'main'
         uses: actions/upload-pages-artifact@v1
         with:
           path: published/wwwroot
