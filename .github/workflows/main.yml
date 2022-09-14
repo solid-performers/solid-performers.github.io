@@ -32,12 +32,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check events
-        shell: bash
-        run: |
-          echo "${{ github.event_name }}"
-          echo "${{ github.ref }}"
-          echo "${{ github.ref_name }}"
+      # - name: Check events
+      #   shell: bash
+      #   run: |
+      #     echo "${{ github.event_name }}"
+      #     echo "${{ github.ref }}"
+      #     echo "${{ github.ref_name }}"
 
       - name: Checkout
         uses: actions/checkout@v3
