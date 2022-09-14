@@ -7,6 +7,9 @@ on:
     branches:
     - main
     - 'feature/**'
+  pull_request:
+    branches:
+    - main
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,17 +26,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    name: Deploy to Pages
+  build:
+    name: Build Apps
 
     runs-on: ubuntu-latest
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
+      - name: Check events
+        shell: bash
+        run: |
+          echo "${{ github.event_name }}"
+          echo "${{ github.ref }}"
+          echo "${{ github.ref_name }}"
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -75,6 +80,17 @@ jobs:
         with:
           path: published/wwwroot
 
+  deploy:
+    name: Deploy to Pages
+    if: github.event_name == 'push' && github.ref_name == 'main'
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
